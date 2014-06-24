@@ -100,10 +100,10 @@ public class JpaConfig {
     public Map<String, Object> jpaProperties() {
         Map<String, Object> props = new HashMap<>();
         // TODO
-        props.put("hibernate.cache.use_query_cache", "true");
-        props.put("hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
-        props.put("hibernate.cache.provider_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
-        props.put("hibernate.cache.use_second_level_cache", "true");
+       // props.put("hibernate.cache.use_query_cache", "true");
+       // props.put("hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
+       // props.put("hibernate.cache.provider_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
+      //  props.put("hibernate.cache.use_second_level_cache", "true");
 
         return props;
     }
