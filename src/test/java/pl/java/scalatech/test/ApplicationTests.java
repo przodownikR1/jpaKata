@@ -34,6 +34,7 @@ public class ApplicationTests {
     public void shouldInsertAndRetrieveData() {
         customerRepository.save(new Customer("slawek", "borowiec"));
         List<Customer> customers = customerRepository.findAll();
+        "d".getBytes();
         Assertions.assertThat(customers).isNotEmpty().hasSize(1);
     }
 }

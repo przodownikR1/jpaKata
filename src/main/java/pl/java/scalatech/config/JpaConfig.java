@@ -33,7 +33,7 @@ import com.jolbox.bonecp.BoneCPDataSource;
  *         Module name : JpaKata
  *         Creating time : 30 maj 2014
  */
-@EnableJpaAuditing
+@EnableJpaAuditing 
 @EnableJpaRepositories(basePackages = "pl.java.scalatech.repository")
 @EntityScan(basePackages = "pl.java.scalatech.entity")
 @PropertySource("classpath:spring-data.properties")

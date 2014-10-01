@@ -10,5 +10,5 @@ import pl.java.scalatech.entity.Customer;
  * Creating time :  30 maj 2014
  */
 public interface CustomerRepository extends JpaRepository<Customer, Long>{
-
+   
 }
