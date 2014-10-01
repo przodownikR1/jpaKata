@@ -1,13 +1,13 @@
 package pl.java.scalatech.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import java.math.BigDecimal;
 
+import javax.persistence.Entity;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.experimental.Builder;
 
 /**
  * @author przodownik
@@ -16,17 +16,15 @@ import lombok.RequiredArgsConstructor;
  */
 @Entity
 @Data
-@RequiredArgsConstructor
-public class Customer {
+@Builder
+@AllArgsConstructor
+public class Customer extends PKEntity{
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private long id;
-    private  @NonNull String firstName;
-    private  @NonNull String lastName;
-
+    private @NonNull String name;
+    private @NonNull String login;
+    private  BigDecimal salary;
     public Customer(){}
-    
+   
 }
 
 

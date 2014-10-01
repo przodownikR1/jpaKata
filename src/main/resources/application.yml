@@ -3,12 +3,12 @@ jdbc:
 
 spring:
   profiles:
-    active: dev
+    active: profile
     
 ---
 
 spring:
-  profiles: dev
+  profiles: profile
 jdbc:
   url: jdbc:mysql://localhost:3306/jpasample
   username: jpa

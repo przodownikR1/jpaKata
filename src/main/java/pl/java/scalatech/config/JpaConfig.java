@@ -15,7 +15,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -33,11 +32,10 @@ import com.jolbox.bonecp.BoneCPDataSource;
  *         Module name : JpaKata
  *         Creating time : 30 maj 2014
  */
-@EnableJpaAuditing 
+ 
 @EnableJpaRepositories(basePackages = "pl.java.scalatech.repository")
 @EntityScan(basePackages = "pl.java.scalatech.entity")
 @PropertySource("classpath:spring-data.properties")
-@Profile("dev")
 public class JpaConfig {
 
     @Value("${dataSource.driverClassName}")
@@ -75,6 +73,7 @@ public class JpaConfig {
     }
 
     @Bean
+    @Profile("profile")
     public DataSource dataSource(DataSource orginalDs) {
         Log4jdbcProxyDataSource dataSource = new Log4jdbcProxyDataSource(orginalDs);
         dataSource.setLogFormatter(logFormater());
@@ -99,12 +98,10 @@ public class JpaConfig {
 
     public Map<String, Object> jpaProperties() {
         Map<String, Object> props = new HashMap<>();
-        // TODO
-       // props.put("hibernate.cache.use_query_cache", "true");
-       // props.put("hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
-       // props.put("hibernate.cache.provider_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
-      //  props.put("hibernate.cache.use_second_level_cache", "true");
-
+        //  props.put("hibernate.cache.use_query_cache", "true");
+        // props.put("hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
+        // props.put("hibernate.cache.provider_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
+        //  props.put("hibernate.cache.use_second_level_cache", "true");
         return props;
     }
 
