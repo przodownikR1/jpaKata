@@ -8,8 +8,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import pl.java.scalatech.app.JpaKataApplication;
 import pl.java.scalatech.config.JpaConfig;
@@ -22,8 +24,9 @@ import pl.java.scalatech.repository.CustomerRepository;
  *         Creating time : 30 maj 2014
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = { JpaKataApplication.class, JpaConfig.class })
+@SpringApplicationConfiguration(classes = {JpaKataApplication.class,  JpaConfig.class })
 @ActiveProfiles(value="dev")
+@Transactional
 public class ApplicationTests {
     @Autowired
     private CustomerRepository customerRepository;
