@@ -1,5 +1,6 @@
 package pl.java.scalatech.config;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,11 +10,13 @@ import net.sf.log4jdbc.Log4jdbcProxyDataSource;
 import net.sf.log4jdbc.tools.Log4JdbcCustomFormatter;
 import net.sf.log4jdbc.tools.LoggingType;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
@@ -25,6 +28,7 @@ import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import com.google.common.collect.Lists;
 import com.jolbox.bonecp.BoneCPDataSource;
 
 /**
@@ -32,30 +36,42 @@ import com.jolbox.bonecp.BoneCPDataSource;
  *         Module name : JpaKata
  *         Creating time : 30 maj 2014
  */
- 
+
 @EnableJpaRepositories(basePackages = "pl.java.scalatech.repository")
 @EntityScan(basePackages = "pl.java.scalatech.entity")
 @PropertySource("classpath:spring-data.properties")
+@PropertySource("classpath:application.properties")
 public class JpaConfig {
+    @Autowired
+    private Environment env;
 
     @Value("${dataSource.driverClassName}")
     private String driver;
+    
     @Value("${dataSource.url}")
     private String url;
+    
     @Value("${dataSource.username}")
     private String username;
+    
     @Value("${dataSource.password}")
     private String password;
+    
     @Value("${hibernate.dialect}")
     private String dialect;
+    
     @Value("${hibernate.hbm2ddl.auto}")
     private Boolean hbm2ddlAuto;
+    
     @Value("${boneCp.partition.count}")
     private int partitionCount;
+    
     @Value("${boneCp.partition.minConnectionsPerPartition}")
     private int minConnectionsPerPartition;
+    
     @Value("${boneCp.partition.maxConnectionsPerPartition}")
     private int maxConnectionsPerPartition;
+    
     @Value("${hibernate.show.sql}")
     private Boolean showSql;
 
@@ -79,13 +95,13 @@ public class JpaConfig {
         dataSource.setLogFormatter(logFormater());
         return dataSource;
     }
-    
+
     @Bean
-    @Profile("dev")
+    @Profile(value={"dev","test"})
     public DataSource dataSource() {
         return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL).build();
     }
-    
+
     @Bean
     public PlatformTransactionManager transactionManager() {
         return new JpaTransactionManager();
@@ -98,20 +114,24 @@ public class JpaConfig {
 
     public Map<String, Object> jpaProperties() {
         Map<String, Object> props = new HashMap<>();
-        //  props.put("hibernate.cache.use_query_cache", "true");
-        // props.put("hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
-        // props.put("hibernate.cache.provider_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
-        //  props.put("hibernate.cache.use_second_level_cache", "true");
+   /*     props.put("hibernate.cache.use_query_cache", "true");
+        props.put("hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
+        props.put("hibernate.cache.provider_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
+        props.put("hibernate.cache.use_second_level_cache", "true");*/
         return props;
     }
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean lef = new LocalContainerEntityManagerFactoryBean();
-        lef.setDataSource(dataSource(dataSourceOrginal()));
+        if (Arrays.asList(env.getActiveProfiles()).containsAll(Lists.newArrayList("dev","test"))) {
+            lef.setDataSource(dataSource(dataSource()));
+        } else {
+            lef.setDataSource(dataSource(dataSourceOrginal()));
+        }
         lef.setJpaVendorAdapter(jpaVendorAdapter());
         lef.setJpaPropertyMap(jpaProperties());
-        lef.setPackagesToScan("pl.java.scalatech.entity"); //eliminate persistence.xml
+        lef.setPackagesToScan("pl.java.scalatech.entity"); // eliminate persistence.xml
         return lef;
     }
 
