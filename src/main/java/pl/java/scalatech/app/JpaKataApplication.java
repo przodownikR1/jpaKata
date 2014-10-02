@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.PageRequest;
 
@@ -31,10 +32,12 @@ public class JpaKataApplication {
     private CustomerService customerService;
 
     public static void main(String[] args) {
+        System.setProperty("spring.profiles.default", System.getProperty("spring.profiles.default", "test"));
         SpringApplication.run(JpaKataApplication.class, args);
     }
 
     @Bean
+    @Profile("test")
     InitializingBean populateData(final CustomerService customerService) {
         return () -> {
 
