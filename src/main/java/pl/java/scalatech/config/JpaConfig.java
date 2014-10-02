@@ -1,5 +1,6 @@
 package pl.java.scalatech.config;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,11 +10,13 @@ import net.sf.log4jdbc.Log4jdbcProxyDataSource;
 import net.sf.log4jdbc.tools.Log4JdbcCustomFormatter;
 import net.sf.log4jdbc.tools.LoggingType;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
@@ -25,6 +28,7 @@ import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import com.google.common.collect.Lists;
 import com.jolbox.bonecp.BoneCPDataSource;
 
 /**
@@ -32,12 +36,14 @@ import com.jolbox.bonecp.BoneCPDataSource;
  *         Module name : JpaKata
  *         Creating time : 30 maj 2014
  */
- 
+
 @EnableJpaRepositories(basePackages = "pl.java.scalatech.repository")
 @EntityScan(basePackages = "pl.java.scalatech.entity")
 @PropertySource("classpath:spring-data.properties")
+@PropertySource("classpath:application.properties")
 public class JpaConfig {
-
+    @Autowired
+    private Environment env;
     @Value("${dataSource.driverClassName}")
     private String driver;
     @Value("${dataSource.url}")
@@ -55,7 +61,15 @@ public class JpaConfig {
     @Value("${boneCp.partition.minConnectionsPerPartition}")
     private int minConnectionsPerPartition;
     @Value("${boneCp.partition.maxConnectionsPerPartition}")
-    private int maxConnectionsPerPartition;
+    private int maxConnectionsPerPartition; 
+    @Value("${bonecp.idleConnectionTestPeriodInMinutes}")
+    private int idleConnectionTestPeriodInMinutes;
+    @Value("${bonecp.acquireIncrement}")
+    private int acquireIncrement;
+    @Value("${bonecp.statementsCacheSize}")
+    private int statementsCacheSize;
+    @Value("${bonecp.idleMaxAgeInMinutes}")
+    private int idleMaxAgeInMinutes;
     @Value("${hibernate.show.sql}")
     private Boolean showSql;
 
@@ -69,6 +83,14 @@ public class JpaConfig {
         boneCPDataSource.setPartitionCount(partitionCount);
         boneCPDataSource.setMinConnectionsPerPartition(minConnectionsPerPartition);
         boneCPDataSource.setMaxConnectionsPerPartition(maxConnectionsPerPartition);
+        
+        boneCPDataSource.setIdleConnectionTestPeriodInMinutes(idleConnectionTestPeriodInMinutes);
+        boneCPDataSource.setIdleMaxAgeInMinutes(idleMaxAgeInMinutes);
+    
+ 
+        boneCPDataSource.setAcquireIncrement(acquireIncrement);
+        boneCPDataSource.setStatementsCacheSize(statementsCacheSize);
+        
         return boneCPDataSource;
     }
 
@@ -79,13 +101,13 @@ public class JpaConfig {
         dataSource.setLogFormatter(logFormater());
         return dataSource;
     }
-    
+
     @Bean
-    @Profile("dev")
+    @Profile(value = { "dev", "test" })
     public DataSource dataSource() {
         return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL).build();
     }
-    
+
     @Bean
     public PlatformTransactionManager transactionManager() {
         return new JpaTransactionManager();
@@ -98,20 +120,28 @@ public class JpaConfig {
 
     public Map<String, Object> jpaProperties() {
         Map<String, Object> props = new HashMap<>();
-        //  props.put("hibernate.cache.use_query_cache", "true");
-        // props.put("hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
-        // props.put("hibernate.cache.provider_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
-        //  props.put("hibernate.cache.use_second_level_cache", "true");
+          props.put("hibernate.cache.use_second_level_cache", true);
+          props.put("hibernate.generate_statistics",true);
+          props.put("hibernate.cache.use_structured_entries", true);
+          props.put("hibernate.cache.use_query_cache", true);
+          //props.put("hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory");
+          //props.put("hibernate.cache.provider_class", "org.hibernate.cache.EhCacheProvide");
+          props.put("hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory");
+          props.put("javax.persistence.sharedCache.mode","ENABLE_SELECTIVE");
         return props;
     }
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean lef = new LocalContainerEntityManagerFactoryBean();
-        lef.setDataSource(dataSource(dataSourceOrginal()));
+        if (Arrays.asList(env.getActiveProfiles()).containsAll(Lists.newArrayList("dev", "test"))) {
+            lef.setDataSource(dataSource(dataSource()));
+        } else {
+            lef.setDataSource(dataSource(dataSourceOrginal()));
+        }
         lef.setJpaVendorAdapter(jpaVendorAdapter());
         lef.setJpaPropertyMap(jpaProperties());
-        lef.setPackagesToScan("pl.java.scalatech.entity"); //eliminate persistence.xml
+        lef.setPackagesToScan("pl.java.scalatech.entity"); // eliminate persistence.xml
         return lef;
     }
 

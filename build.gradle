@@ -44,6 +44,12 @@ dependencies {
     compile("org.yaml:snakeyaml:1.13")
     compile("org.hsqldb:hsqldb:2.3.2")
     compile("com.jolbox:bonecp:${bonecpVersion}")
+    
+    compile("org.hibernate:hibernate-ehcache:4.3.6.Final")
+    compile("org.hibernate:hibernate-entitymanager:4.3.6.Final")
+    compile("org.hibernate:hibernate-jmx:3.5.6-Final" )
+    compile("org.springframework:spring-context-support:4.1.0.RELEASE")
+    
      
     compile("com.jolbox:bonecp-spring:${bonecpVersion}" )
        
@@ -60,6 +66,12 @@ dependencies {
     testCompile("org.easytesting:fest-assert:${festAssertVersion}")
     testCompile("com.googlecode.catch-exception:catch-exception:1.2.0")
 }
+
+test {
+    maxParallelForks = 8
+    forkEvery = 100
+    maxHeapSize = '2048m'
+    }
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.1'

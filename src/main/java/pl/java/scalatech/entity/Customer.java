@@ -2,7 +2,11 @@ package pl.java.scalatech.entity;
 
 import java.math.BigDecimal;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,6 +22,8 @@ import lombok.experimental.Builder;
 @Data
 @Builder
 @AllArgsConstructor
+@Cacheable(value=true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Customer extends PKEntity{
 
     private @NonNull String name;

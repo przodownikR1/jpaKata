@@ -16,5 +16,6 @@ public interface CustomerService {
     Page<Customer> getAllCustomers(Pageable pageable);
     Customer persistCustomer(Customer customer);
     void deleteCustomer(Customer customer);
-   
+    Customer findByLogin(String login);
+    Customer findByNameLike(String name);
 }

@@ -43,4 +43,14 @@ public class CustomerServiceImpl implements CustomerService {
         customerRepository.delete(customer);
     }
 
+    @Override
+    public Customer findByLogin(String login) {
+        return customerRepository.findByLogin(login);
+    }
+
+    @Override
+    public Customer findByNameLike(String name) {
+        return customerRepository.findByNameLike(name);
+    }
+
 }

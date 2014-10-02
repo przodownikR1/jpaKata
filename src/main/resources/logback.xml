@@ -77,6 +77,14 @@
 	<logger name="org.hibernate" level="info" additivity="false">
 		<appender-ref ref="Console" />
 	</logger>
+	
+	<logger name="org.hibernate.cache" level="info" additivity="false">
+		<appender-ref ref="Console" />
+	</logger>
+	
+	<logger name="com.jolbox" level="info" additivity="false">
+		<appender-ref ref="Console" />
+	</logger>
 
 	<logger name="pl.java.scalatech" additivity="false">
 		<level value="INFO" />
@@ -120,7 +128,7 @@
 	</logger>
 
 
-	<root level="debug">
+	<root level="info">
 		<appender-ref ref="Console" />
 	</root>
 </configuration>

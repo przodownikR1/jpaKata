@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.hibernate.metamodel.source.annotations.JPADotNames;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -12,9 +13,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageRequest;
 
+import pl.java.scalatech.config.JmxConfig;
 import pl.java.scalatech.config.JpaConfig;
 import pl.java.scalatech.entity.Customer;
 import pl.java.scalatech.service.customer.CustomerService;
@@ -24,20 +28,23 @@ import pl.java.scalatech.service.customer.CustomerService;
 @EnableAutoConfiguration
 @PropertySource("classpath:application.properties")
 @Slf4j
-@Import(JpaConfig.class)
-public class JpaKataApplication {
+@Import(value={JpaConfig.class,JmxConfig.class})
 
+public class JpaKataApplication {
     @Autowired
     private CustomerService customerService;
 
     public static void main(String[] args) {
+        System.setProperty("spring.profiles.default", System.getProperty("spring.profiles.default", "test"));
+       
         SpringApplication.run(JpaKataApplication.class, args);
     }
 
     @Bean
+    @Profile("test")
     InitializingBean populateData(final CustomerService customerService) {
         return () -> {
-
+            System.err.println("ssssssssssssss");
             customerService.persistCustomer(Customer.builder().login("przodownik").name("slawek").salary(new BigDecimal(2342)).build());
             customerService.persistCustomer(Customer.builder().login("ironMike").name("tyson").salary(new BigDecimal(42)).build());
             customerService.persistCustomer(Customer.builder().login("royjones").name("jones").salary(new BigDecimal(52)).build());
