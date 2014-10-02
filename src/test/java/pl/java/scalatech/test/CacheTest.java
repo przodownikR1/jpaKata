@@ -1,30 +1,34 @@
 package pl.java.scalatech.test;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
-import pl.java.scalatech.config.JpaConfig;
+import pl.java.scalatech.app.JpaKataApplication;
 import pl.java.scalatech.entity.Customer;
 import pl.java.scalatech.service.customer.CustomerService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = { JpaConfig.class })
+@SpringApplicationConfiguration(classes = { JpaKataApplication.class})
 @ActiveProfiles(value="dev")
-
+@Transactional
 @Slf4j
 public class CacheTest {
     @Autowired
     private CustomerService customerService;
     
-    @Test
+    @Before
     public void init(){
         customerService.persistCustomer(Customer.builder().login("przodownik").name("slawek").salary(new BigDecimal(2342)).build());
         customerService.persistCustomer(Customer.builder().login("ironMike").name("tyson").salary(new BigDecimal(42)).build());
@@ -34,9 +38,25 @@ public class CacheTest {
        
     }
     @Test
-    public void shouldCacheWork(){
+
+    public void shouldCacheWorkWhenSearchByLogin(){
+       
         log.info("{}",customerService.findByLogin("przodownik"));
         log.info("{}",customerService.findByLogin("przodownik"));
-        log.info("{}",customerService.findByLogin("przodownik"));
+        log.info("{}",customerService.findByLogin("money"));
+        log.info("{}",customerService.findByLogin("money"));
+        log.info("{}",customerService.findByLogin("money"));
+        
+    }
+    @Test
+   
+    public void shouldCacheWorkWhenSearchByName() throws IOException{
+       
+        log.info("{}",customerService.findByNameLike("slawek"));
+        log.info("{}",customerService.findByNameLike("slawek"));
+        log.info("{}",customerService.findByNameLike("sla"));
+        log.info("{}",customerService.findByNameLike("sla"));
+        log.info("{}",customerService.findByNameLike("sla"));
+     
     }
 }
