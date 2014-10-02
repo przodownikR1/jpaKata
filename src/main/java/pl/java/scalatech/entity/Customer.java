@@ -5,13 +5,14 @@ import java.math.BigDecimal;
 import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
+import lombok.ToString;
 import lombok.experimental.Builder;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * @author przodownik
@@ -20,9 +21,10 @@ import lombok.experimental.Builder;
  */
 @Entity
 @Data
+@ToString(callSuper = true)
 @Builder
 @AllArgsConstructor
-@Cacheable(value=true)
+@Cacheable
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Customer extends PKEntity{
 

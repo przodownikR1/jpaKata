@@ -1,5 +1,7 @@
 package pl.java.scalatech.service.customer.impl;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +19,7 @@ import pl.java.scalatech.service.customer.CustomerService;
  */
 @Transactional(readOnly=true)
 @Service
+@Slf4j
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
@@ -53,4 +56,9 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository.findByNameLike(name);
     }
 
+    @Override
+    public Customer findById(Long id) {
+        return customerRepository.getOne(id);
+    }
+  
 }

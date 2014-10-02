@@ -18,4 +18,6 @@ public interface CustomerService {
     void deleteCustomer(Customer customer);
     Customer findByLogin(String login);
     Customer findByNameLike(String name);
+
+    Customer findById(Long id);
 }

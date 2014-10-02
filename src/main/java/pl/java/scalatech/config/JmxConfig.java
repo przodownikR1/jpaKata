@@ -28,7 +28,7 @@ public class JmxConfig {
     @DependsOn("statisticsService")
     public MBeanExporter jmxService(Statistics statistics) {
         MBeanExporter exporter = new MBeanExporter();
-        exporter.setBeans(ImmutableMap.of("Hibernate:name=statistics", (Object) statistics));
+        exporter.setBeans(ImmutableMap.of("Hibernate:application=Statistics", (Object) statistics));
         return exporter;
     }
 

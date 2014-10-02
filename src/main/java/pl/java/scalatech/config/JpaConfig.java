@@ -1,6 +1,5 @@
 package pl.java.scalatech.config;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +27,6 @@ import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import com.google.common.collect.Lists;
 import com.jolbox.bonecp.BoneCPDataSource;
 
 /**
@@ -124,8 +122,6 @@ public class JpaConfig {
           props.put("hibernate.generate_statistics",true);
           props.put("hibernate.cache.use_structured_entries", true);
           props.put("hibernate.cache.use_query_cache", true);
-          //props.put("hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory");
-          //props.put("hibernate.cache.provider_class", "org.hibernate.cache.EhCacheProvide");
           props.put("hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory");
           props.put("javax.persistence.sharedCache.mode","ENABLE_SELECTIVE");
         return props;
@@ -134,11 +130,11 @@ public class JpaConfig {
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean lef = new LocalContainerEntityManagerFactoryBean();
-        if (Arrays.asList(env.getActiveProfiles()).containsAll(Lists.newArrayList("dev", "test"))) {
+        // if (Arrays.asList(env.getActiveProfiles()).containsAll(Lists.newArrayList("dev", "test"))) {
             lef.setDataSource(dataSource(dataSource()));
-        } else {
-            lef.setDataSource(dataSource(dataSourceOrginal()));
-        }
+        // } else {
+        // lef.setDataSource(dataSource(dataSourceOrginal()));
+        // }
         lef.setJpaVendorAdapter(jpaVendorAdapter());
         lef.setJpaPropertyMap(jpaProperties());
         lef.setPackagesToScan("pl.java.scalatech.entity"); // eliminate persistence.xml
@@ -162,4 +158,5 @@ public class JpaConfig {
         formatter.setSqlPrefix("SQL:\r");
         return formatter;
     }
+    
 }
