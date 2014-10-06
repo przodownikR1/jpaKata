@@ -16,6 +16,6 @@ public interface CustomerService {
     Page<Customer> getAllCustomers(Pageable pageable);
     Customer persistCustomer(Customer customer);
     void deleteCustomer(Customer customer);
-    Customer getCurrentAccount();
+  
    
 }

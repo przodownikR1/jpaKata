@@ -1,6 +1,7 @@
 package pl.java.scalatech.entity;
 
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Basic;
@@ -15,13 +16,15 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @MappedSuperclass
 @Data
-public abstract class PKEntity  {
-    /**
-	 * 
-	 */
+@EqualsAndHashCode(callSuper=false)
+@ToString(callSuper=true)
+public abstract class PKEntity implements Serializable {
+ 
     private static final long serialVersionUID = 7669211182758111346L;
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)

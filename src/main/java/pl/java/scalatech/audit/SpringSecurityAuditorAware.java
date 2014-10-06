@@ -4,17 +4,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Component;
 
-import pl.java.scalatech.entity.Customer;
-import pl.java.scalatech.service.customer.CustomerService;
+import pl.java.scalatech.entity.User;
+import pl.java.scalatech.repository.UserRepository;
 
 @Component
-public class SpringSecurityAuditorAware implements AuditorAware<Customer> {
+public class SpringSecurityAuditorAware implements AuditorAware<User> {
 
-    @Autowired private CustomerService  customerService;
-
+    @Autowired private UserRepository userRepository;
+    
     @Override
-    public Customer getCurrentAuditor() {
-        return customerService.getCurrentAccount();
+    public User getCurrentAuditor() {
+        User user = userRepository.findAll().get(0);  
+        return user;
     }
 
 }

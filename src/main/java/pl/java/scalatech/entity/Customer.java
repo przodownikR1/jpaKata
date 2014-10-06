@@ -6,7 +6,9 @@ import javax.persistence.Entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NonNull;
+import lombok.ToString;
 import lombok.experimental.Builder;
 
 /**
@@ -16,10 +18,14 @@ import lombok.experimental.Builder;
  */
 @Entity
 @Data
+@EqualsAndHashCode(callSuper=true)
+@ToString(callSuper=true)
 @Builder
 @AllArgsConstructor
-public class Customer extends PKEntity{
+public class Customer extends Audit{
 
+ 
+    private static final long serialVersionUID = 1L;
     private @NonNull String name;
     private @NonNull String login;
     private  BigDecimal salary;

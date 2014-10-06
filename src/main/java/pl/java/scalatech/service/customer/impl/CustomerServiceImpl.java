@@ -1,7 +1,5 @@
 package pl.java.scalatech.service.customer.impl;
 
-import java.math.BigDecimal;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -46,11 +44,6 @@ public class CustomerServiceImpl implements CustomerService {
         customerRepository.delete(customer);
     }
 
-    @Override
-    public Customer getCurrentAccount() {
-        Pageable p = new PageRequest(0, 1);
-        Page<Customer> page =  getAllCustomers(p);
-       return Customer.builder().login("xxxx").name("ddd").salary(new BigDecimal(123)).build();
-    }
+   
 
 }
