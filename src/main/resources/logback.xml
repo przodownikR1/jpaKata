@@ -118,6 +118,10 @@
 		<level value="error" />
 		<appender-ref ref="Sql" />
 	</logger>
+	
+	<logger name="org.h2" additivity="false" level="info" >
+	   <appender-ref ref="Console" />
+	</logger>
 
 
 	<root level="debug">

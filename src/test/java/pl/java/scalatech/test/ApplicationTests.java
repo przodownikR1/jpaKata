@@ -38,14 +38,15 @@ public class ApplicationTests {
     private CustomerService customerService;
     @Autowired
     private UserRepository userRepository;
+
     @Before
-    public void init(){
-     userRepository.save(new User("przodownik"));
-     userRepository.save(new User("toy"));
-     userRepository.save(new User("boy"));
-     
+    public void init() {
+        userRepository.save(new User("przodownik"));
+        userRepository.save(new User("toy"));
+        userRepository.save(new User("boy"));
+
     }
-    
+
     @Test
     public void contextLoads() {
         Assertions.assertThat(true);
@@ -53,11 +54,11 @@ public class ApplicationTests {
 
     @Test
     public void shouldInsertAndRetrieveData() throws InterruptedException {
-        log.info("++++  user {}",userRepository.findAll());
+        log.info("++++  user {}", userRepository.findAll());
         customerService.persistCustomer(Customer.builder().login("przodownik").name("slawek").salary(new BigDecimal(2342)).build());
         List<Customer> customers = customerService.getAllCustomers(new PageRequest(0, 1)).getContent();
-        log.info("++++ Audit : {}",customers.get(0));
+        log.info("++++ Audit : {}", customers.get(0));
         Assertions.assertThat(customers).isNotEmpty().hasSize(1);
-
+  
     }
 }

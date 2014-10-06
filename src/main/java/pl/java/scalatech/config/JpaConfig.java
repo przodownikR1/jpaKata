@@ -7,7 +7,6 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import net.sf.log4jdbc.Log4jdbcProxyDataSource;
 import net.sf.log4jdbc.tools.Log4JdbcCustomFormatter;
 import net.sf.log4jdbc.tools.LoggingType;
 
@@ -33,6 +32,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import com.google.common.collect.Lists;
+import com.googlecode.flyway.core.Flyway;
 import com.jolbox.bonecp.BoneCPDataSource;
 
 /**
@@ -83,8 +83,9 @@ public class JpaConfig {
     @Value("${jpa.package}")
     private String jpaPackage;
 
-    @Bean(destroyMethod = "close")
+  /*  @Bean(destroyMethod = "close")
     @DependsOn("h2Server")
+    @Profile("test")
     public DataSource dataSourceOrginal() {
         BoneCPDataSource boneCPDataSource = new BoneCPDataSource();
         boneCPDataSource.setDriverClass(driver);
@@ -95,12 +96,12 @@ public class JpaConfig {
         boneCPDataSource.setMinConnectionsPerPartition(minConnectionsPerPartition);
         boneCPDataSource.setMaxConnectionsPerPartition(maxConnectionsPerPartition);
         return boneCPDataSource;
-    }
+    }*/
 
-   /* @Bean
+    /*@Bean
     public Flyway flyway() {
         Flyway flyway = new Flyway();
-        flyway.setDataSource(dataSourceOrginal());
+        flyway.setDataSource(dataSource());
         flyway.migrate();
         return flyway;
     }*/
@@ -120,7 +121,7 @@ public class JpaConfig {
   
 
     @Bean
-    @Profile(value = { "dev", "test" })
+  
     public DataSource dataSource() {
         return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2).build();
     }
@@ -130,6 +131,7 @@ public class JpaConfig {
         return new JpaTransactionManager();
     }
 
+    
     @Bean
     public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
         return new PersistenceExceptionTranslationPostProcessor();
@@ -152,7 +154,7 @@ public class JpaConfig {
         if (Arrays.asList(env.getActiveProfiles()).containsAll(Lists.newArrayList("dev", "test"))) {
             lef.setDataSource(dataSource());
         } else {
-            lef.setDataSource(dataSourceOrginal());
+            lef.setDataSource(dataSource());
         }
         lef.setJpaVendorAdapter(jpaVendorAdapter());
         lef.setJpaPropertyMap(jpaProperties());

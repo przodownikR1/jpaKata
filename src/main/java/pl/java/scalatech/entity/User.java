@@ -1,6 +1,7 @@
 package pl.java.scalatech.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper=true)
 @NoArgsConstructor
+@Table(name="p_user")
 public class User extends PKEntity{
 
   
