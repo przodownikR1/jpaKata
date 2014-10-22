@@ -15,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
@@ -32,8 +30,6 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import com.google.common.collect.Lists;
-import com.googlecode.flyway.core.Flyway;
-import com.jolbox.bonecp.BoneCPDataSource;
 
 /**
  * @author przodownik
@@ -42,7 +38,7 @@ import com.jolbox.bonecp.BoneCPDataSource;
  */
 
 @EnableJpaRepositories(basePackages = "pl.java.scalatech.repository")
-@EntityScan(basePackages = "pl.java.scalatech")
+@EntityScan(basePackages = "pl.java.scalatech.entity")
 @EnableJpaAuditing(auditorAwareRef = "springSecurityAuditorAware")
 @PropertySource("classpath:spring-data.properties")
 @PropertySource("classpath:application.properties")
@@ -98,14 +94,14 @@ public class JpaConfig {
         return boneCPDataSource;
     }*/
 
-    /*@Bean
+   /* @Bean
     public Flyway flyway() {
         Flyway flyway = new Flyway();
         flyway.setDataSource(dataSource());
         flyway.migrate();
         return flyway;
-    }*/
-
+    }
+*/
     @Bean(name = "h2Server")
     Server h2Server() throws SQLException {
         // jdbc:h2:tcp://localhost:9092/mem:test;DB_CLOSE_DELAY=-1
