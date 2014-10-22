@@ -167,7 +167,7 @@ public class JpaConfig {
         HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
         hibernateJpaVendorAdapter.setShowSql(showSql);
         hibernateJpaVendorAdapter.setGenerateDdl(hbm2ddlAuto);
-        hibernateJpaVendorAdapter.setDatabase(Database.HSQL);
+        hibernateJpaVendorAdapter.setDatabase(Database.H2);
         hibernateJpaVendorAdapter.setDatabasePlatform(dialect);
         return hibernateJpaVendorAdapter;
     }
