@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sf.log4jdbc.tools.Log4JdbcCustomFormatter;
 import net.sf.log4jdbc.tools.LoggingType;
 
@@ -15,13 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -42,6 +43,7 @@ import com.google.common.collect.Lists;
 @EnableJpaAuditing(auditorAwareRef = "springSecurityAuditorAware")
 @PropertySource("classpath:spring-data.properties")
 @PropertySource("classpath:application.properties")
+@Slf4j
 public class JpaConfig {
     @Autowired
     private Environment env;
@@ -102,25 +104,32 @@ public class JpaConfig {
         return flyway;
     }
 */
-    @Bean(name = "h2Server")
-    Server h2Server() throws SQLException {
-        // jdbc:h2:tcp://localhost:9092/mem:test;DB_CLOSE_DELAY=-1
-        return Server.createTcpServer().start();
+    @Bean
+    @DependsOn(value="h2Server")
+    DataSource dataSource(Server h2Server) {
+        SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
+        dataSource.setDriverClass(org.h2.Driver.class);
+        dataSource.setUsername("sa");
+        dataSource.setPassword("");
+        dataSource.setUrl("jdbc:h2:tcp://localhost:9092/mem:przodownik;DB_CLOSE_DELAY=-1");
+        return dataSource;
+    }
+    
+    
+    @Bean(name = "h2Server", initMethod = "start", destroyMethod = "stop")
+    @DependsOn(value = "h2WebServer")
+    public org.h2.tools.Server createTcpServer() throws SQLException {
+        return org.h2.tools.Server.createTcpServer("-tcp,-tcpAllowOthers,-tcpPort,9092".split(","));
     }
 
-    @Bean
-    Server h2WebServer() throws SQLException {
-        // http://localhost:8082/
-        return Server.createWebServer().start();
+    @Bean(name = "h2WebServer", initMethod = "start", destroyMethod = "stop")
+    public org.h2.tools.Server createWebServer() throws SQLException {
+        return org.h2.tools.Server.createWebServer("-web,-webAllowOthers,-webPort,8082".split(","));
     }
-
-  
-
-    @Bean
-  
+    /*@Bean  
     public DataSource dataSource() {
         return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2).build();
-    }
+    }*/
 
     @Bean
     public PlatformTransactionManager transactionManager() {
@@ -145,12 +154,12 @@ public class JpaConfig {
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() throws SQLException {
         LocalContainerEntityManagerFactoryBean lef = new LocalContainerEntityManagerFactoryBean();
         if (Arrays.asList(env.getActiveProfiles()).containsAll(Lists.newArrayList("dev", "test"))) {
-            lef.setDataSource(dataSource());
+            lef.setDataSource(dataSource(createTcpServer()));
         } else {
-            lef.setDataSource(dataSource());
+            lef.setDataSource(dataSource(createTcpServer()));
         }
         lef.setJpaVendorAdapter(jpaVendorAdapter());
         lef.setJpaPropertyMap(jpaProperties());
@@ -175,4 +184,5 @@ public class JpaConfig {
         formatter.setSqlPrefix("SQL:\r");
         return formatter;
     }
+   
 }
