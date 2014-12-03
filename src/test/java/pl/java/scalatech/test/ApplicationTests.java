@@ -17,7 +17,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import pl.java.scalatech.app.JpaKataApplication;
-import pl.java.scalatech.config.JpaConfig;
+import pl.java.scalatech.config.JpaEmbeddedConfig;
 import pl.java.scalatech.entity.Customer;
 import pl.java.scalatech.entity.User;
 import pl.java.scalatech.repository.UserRepository;
@@ -29,8 +29,8 @@ import pl.java.scalatech.service.customer.CustomerService;
  *         Creating time : 30 maj 2014
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = { JpaKataApplication.class, JpaConfig.class })
-@ActiveProfiles(value = "dev")
+@SpringApplicationConfiguration(classes = { JpaKataApplication.class, JpaEmbeddedConfig.class })
+@ActiveProfiles(value = "test")
 @Transactional
 @Slf4j
 public class ApplicationTests {

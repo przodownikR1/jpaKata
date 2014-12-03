@@ -1,7 +1,6 @@
 package pl.java.scalatech.config;
 
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,19 +10,18 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.log4jdbc.tools.Log4JdbcCustomFormatter;
 import net.sf.log4jdbc.tools.LoggingType;
 
-import org.h2.tools.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -31,22 +29,17 @@ import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import com.google.common.collect.Lists;
-
-/**
- * @author przodownik
- *         Module name : JpaKata
- *         Creating time : 30 maj 2014
- */
+import com.jolbox.bonecp.BoneCPDataSource;
 
 @EnableJpaRepositories(basePackages = "pl.java.scalatech.repository")
 @EntityScan(basePackages = "pl.java.scalatech.entity")
-@EnableJpaAuditing(auditorAwareRef = "springSecurityAuditorAware")
+//@EnableJpaAuditing(auditorAwareRef = "springSecurityAuditorAware")
 @PropertySource("classpath:spring-data.properties")
-@Profile(value="dev")
 @PropertySource("classpath:application.properties")
 @Slf4j
-public class JpaConfig {
+@Profile(value = "test")
+public class JpaEmbeddedConfig {
+
     @Autowired
     private Environment env;
 
@@ -83,9 +76,17 @@ public class JpaConfig {
     @Value("${jpa.package}")
     private String jpaPackage;
 
-  /*  @Bean(destroyMethod = "close")
-    @DependsOn("h2Server")
-    @Profile("test")
+    /*
+     * @Bean
+     * public Flyway flyway() {
+     * Flyway flyway = new Flyway();
+     * flyway.setDataSource(dataSource());
+     * flyway.migrate();
+     * return flyway;
+     * }
+     */
+
+    @Bean(destroyMethod = "close")
     public DataSource dataSourceOrginal() {
         BoneCPDataSource boneCPDataSource = new BoneCPDataSource();
         boneCPDataSource.setDriverClass(driver);
@@ -96,49 +97,18 @@ public class JpaConfig {
         boneCPDataSource.setMinConnectionsPerPartition(minConnectionsPerPartition);
         boneCPDataSource.setMaxConnectionsPerPartition(maxConnectionsPerPartition);
         return boneCPDataSource;
-    }*/
-
-   /* @Bean
-    public Flyway flyway() {
-        Flyway flyway = new Flyway();
-        flyway.setDataSource(dataSource());
-        flyway.migrate();
-        return flyway;
     }
-*/
+
     @Bean
-    @DependsOn(value="h2Server")
-    DataSource dataSource(Server h2Server) {
-        SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
-        dataSource.setDriverClass(org.h2.Driver.class);
-        dataSource.setUsername("sa");
-        dataSource.setPassword("");
-        dataSource.setUrl("jdbc:h2:tcp://localhost:9092/mem:przodownik;DB_CLOSE_DELAY=-1");
-        return dataSource;
-    }
-    
-    
-    @Bean(name = "h2Server", initMethod = "start", destroyMethod = "stop")
-    @DependsOn(value = "h2WebServer")
-    public org.h2.tools.Server createTcpServer() throws SQLException {
-        return org.h2.tools.Server.createTcpServer("-tcp,-tcpAllowOthers,-tcpPort,9092".split(","));
-    }
-
-    @Bean(name = "h2WebServer", initMethod = "start", destroyMethod = "stop")
-    public org.h2.tools.Server createWebServer() throws SQLException {
-        return org.h2.tools.Server.createWebServer("-web,-webAllowOthers,-webPort,8082".split(","));
-    }
-    /*@Bean  
     public DataSource dataSource() {
         return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2).build();
-    }*/
+    }
 
     @Bean
     public PlatformTransactionManager transactionManager() {
         return new JpaTransactionManager();
     }
 
-    
     @Bean
     public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
         return new PersistenceExceptionTranslationPostProcessor();
@@ -158,11 +128,7 @@ public class JpaConfig {
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() throws SQLException {
         LocalContainerEntityManagerFactoryBean lef = new LocalContainerEntityManagerFactoryBean();
-        if (Arrays.asList(env.getActiveProfiles()).containsAll(Lists.newArrayList("dev", "test"))) {
-            lef.setDataSource(dataSource(createTcpServer()));
-        } else {
-            lef.setDataSource(dataSource(createTcpServer()));
-        }
+        lef.setDataSource(dataSource());
         lef.setJpaVendorAdapter(jpaVendorAdapter());
         lef.setJpaPropertyMap(jpaProperties());
         lef.setPackagesToScan(jpaPackage); // eliminate persistence.xml
@@ -186,5 +152,5 @@ public class JpaConfig {
         formatter.setSqlPrefix("SQL:\r");
         return formatter;
     }
-   
+
 }
