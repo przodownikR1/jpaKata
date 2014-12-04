@@ -12,7 +12,7 @@ ext {
      springDataNeo4jVersion = "3.0.0.RELEASE"
      springDataRestWebmvcVersion = "2.0.0.RELEASE"
      hibernateVersion = "4.3.5.Final"
-     springDataJPAVersion = "1.7.0.RELEASE"
+     springDataJPAVersion = "1.7.1.RELEASE"
      javaxValidationVersion = "1.1.0.Final"
      hibernateValidatorVersion = "5.0.3.Final"
      jodaTimeHibernateVersion = "1.3"
