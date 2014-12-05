@@ -28,7 +28,9 @@ dependencies {
     compile("com.jolbox:bonecp-spring:${bonecpVersion}" )
     compile("com.jolbox:bonecp-provider:${bonecpProviderVersion}")
     compile("org.lazyluke:log4jdbc-remix:0.2.7")
+    
     compile("pl.java.scalatech:basicEntity:${basicEntityVersion}")
+    
     //compile("org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4:1.16")
     testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
     testCompile("org.mockito:mockito-all:$mockitoVersion")

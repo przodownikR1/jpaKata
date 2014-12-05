@@ -5,15 +5,13 @@ ext {
     nexusBaseUrl = '${nexusURL}'
     nexusSnapshotRepoUrl = "${nexusURL}/snapshots"
     nexusReleaseRepoUrl = "${nexusURL}/releases"
-    logger.quiet("      ---      ${nexusURL}  ${nexusSnapshotRepoUrl}  ${nexusReleaseRepoUrl} ")
+
 
 }
 publishing {
     publications {
         plugin(MavenPublication) {
-            /*groupId 'pl.java.scalatech'
-            artifactId 'basicEntity'
-            version '${version}'*/
+      
             from components.java
             pom.withXml {
                 def root = asNode()
@@ -54,8 +52,10 @@ publishing {
      
         maven {
             name 'remoteRepository'
+            logger.quiet " +++      ${project.version}"
             url project.version.endsWith('-SNAPSHOT') ? nexusSnapshotRepoUrl : nexusReleaseRepoUrl
             logger.quiet "  url : ${url}  ,  group : ${group}   ,  version : ${version}"  
+            
             credentials { 
                 username = '${nexusUsername}'
                 password = '${nexusPassword}'

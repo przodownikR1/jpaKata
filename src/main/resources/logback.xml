@@ -33,7 +33,7 @@
 		<file>jpaKata.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<!-- daily rollover -->
-			<fileNamePattern>${USER_HOME}/log/logs/springExample_%d{yyyy-MM-dd}.log
+			<fileNamePattern>${USER_HOME}/log/logs/jpaKata_%d{yyyy-MM-dd}.log
 			</fileNamePattern>
 			<!-- keep 30 days' worth of history -->
 			<maxHistory>30</maxHistory>
