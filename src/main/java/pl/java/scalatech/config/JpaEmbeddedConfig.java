@@ -18,7 +18,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -28,8 +27,6 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
-
-import com.jolbox.bonecp.BoneCPDataSource;
 
 @EnableJpaRepositories(basePackages = "pl.java.scalatech.repository")
 @EntityScan(basePackages = "pl.java.scalatech.entity")
@@ -86,18 +83,7 @@ public class JpaEmbeddedConfig {
      * }
      */
 
-    @Bean(destroyMethod = "close")
-    public DataSource dataSourceOrginal() {
-        BoneCPDataSource boneCPDataSource = new BoneCPDataSource();
-        boneCPDataSource.setDriverClass(driver);
-        boneCPDataSource.setJdbcUrl(url);
-        boneCPDataSource.setUsername(username);
-        boneCPDataSource.setPassword(password);
-        boneCPDataSource.setPartitionCount(partitionCount);
-        boneCPDataSource.setMinConnectionsPerPartition(minConnectionsPerPartition);
-        boneCPDataSource.setMaxConnectionsPerPartition(maxConnectionsPerPartition);
-        return boneCPDataSource;
-    }
+   
 
     @Bean
     public DataSource dataSource() {

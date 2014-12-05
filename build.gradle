@@ -12,16 +12,37 @@ buildscript {
 }
 
 apply plugin: 'java'
-apply plugin: 'eclipse'
+apply plugin: 'maven'
 apply from: 'gradle/dependencies.gradle'
+apply from: "gradle/report.gradle"
+apply from: "gradle/groovy.gradle"
+apply from: "gradle/assembler.gradle"
+apply from: "gradle/release.gradle"
+apply from: "gradle/sonar.gradle"
 
-jar {
-    baseName = 'jpakata'
-    version =  '0.0.1-SNAPSHOT'
+sourceSets {
+    intTest
+    main {
+        java { srcDir 'src/main/java' }
+        resources { srcDir 'src/main/resources' }
+    }
+    test {
+        java { srcDir 'src/test/java' }
+        resources { srcDir 'src/test/resources' }
+    }
 }
 
-repositories {
-    mavenCentral()
+
+jar {
+    baseName=projectName
+    manifest {
+        attributes 'Implementation-Title': 'jpaKata',
+        'Implementation-Version': version,
+        'Built-By': System.getProperty('user.name'),
+        'Built-Date': new Date(),
+        'Built-JDK': System.getProperty('java.version'),
+        'Built-Gradle': gradle.gradleVersion
+    }
 }
 
 
