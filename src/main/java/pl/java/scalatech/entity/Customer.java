@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.Builder;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author przodownik
@@ -22,6 +23,7 @@ import lombok.experimental.Builder;
 @ToString(callSuper=true)
 @Builder
 @AllArgsConstructor
+@Slf4j
 public class Customer extends Audit{
 
  
@@ -29,7 +31,10 @@ public class Customer extends Audit{
     private @NonNull String name;
     private @NonNull String login;
     private  BigDecimal salary;
-    public Customer(){}
+    public Customer(){
+        log.info("sdfSD");
+        
+    }
    
 }
 
