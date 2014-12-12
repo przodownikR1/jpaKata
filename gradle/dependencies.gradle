@@ -12,11 +12,9 @@ repositories {
 }
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}")
     compile("org.springframework.boot:spring-boot-starter-aop:${springBootVersion}")
     compile("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
     compile("org.springframework.boot:spring-boot-starter-jdbc:${springBootVersion}")
-    compile("org.springframework.boot:spring-boot-starter-remote-shell:${springBootVersion}")
     compile("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
     compile("org.springframework.boot:spring-boot-starter-logging:${springBootVersion}")
     
@@ -29,8 +27,13 @@ dependencies {
     compile("com.jolbox:bonecp-provider:${bonecpProviderVersion}")
     compile("org.lazyluke:log4jdbc-remix:0.2.7")
     
-    compile("pl.java.scalatech:basicEntity:${basicEntityVersion}")
     
+    compile ("javax.validation:validation-api:${javaxValidationVersion}")
+    compile ("org.hibernate:hibernate-validator:${hibernateValidatorVersion}")
+    compile ("javax.el:el-api:2.2")
+    compile ("org.glassfish.web:el-impl:2.2")
+    compile("pl.java.scalatech:basicEntity:${basicEntityVersion}")
+    compile("org.jadira.usertype:usertype.extended:${jadiraUsertypeVersion}")
     //compile("org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4:1.16")
     testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
     testCompile("org.mockito:mockito-all:$mockitoVersion")

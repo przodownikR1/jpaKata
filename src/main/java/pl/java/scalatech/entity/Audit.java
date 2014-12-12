@@ -23,7 +23,7 @@ import pl.java.scalatech.entity.common.PKEntity;
 @EntityListeners(AuditingEntityListener.class)
 @Data
 @EqualsAndHashCode(callSuper=true)
-public abstract class Audit extends PKEntity {
+public abstract class Audit extends PKEntity<Long> {
     private static final long serialVersionUID = 2663518387056045900L;
 
     @CreatedDate
