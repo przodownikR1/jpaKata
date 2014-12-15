@@ -12,11 +12,7 @@ import lombok.ToString;
 import lombok.experimental.Builder;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * @author przodownik
- * Module name :    JpaKata
- * Creating time :  30 maj 2014
- */
+
 @Entity
 @Data
 @EqualsAndHashCode(callSuper=true)

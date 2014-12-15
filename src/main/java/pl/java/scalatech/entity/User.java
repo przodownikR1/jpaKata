@@ -13,7 +13,7 @@ import pl.java.scalatech.entity.common.EntityCommon;
 @EqualsAndHashCode(callSuper=true)
 @NoArgsConstructor
 @Table(name="p_user")
-public class User extends EntityCommon<Long>{
+public class User extends EntityCommon{
 
   
     private static final long serialVersionUID = -874202160090991934L;
