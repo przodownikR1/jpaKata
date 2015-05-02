@@ -2,12 +2,11 @@ package pl.java.scalatech.service.customer.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import pl.java.scalatech.entity.Customer;
+import pl.java.scalatech.entity.test.TCustomer;
 import pl.java.scalatech.repository.CustomerRepository;
 import pl.java.scalatech.service.customer.CustomerService;
 
@@ -16,7 +15,7 @@ import pl.java.scalatech.service.customer.CustomerService;
  *         Module name : JpaKata
  *         Creating time : 30 maj 2014
  */
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
@@ -28,22 +27,25 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Page<Customer> getAllCustomers(Pageable pageable) {
+    public Page<TCustomer> getAllCustomers(Pageable pageable) {
         return customerRepository.findAll(pageable);
     }
 
     @Override
     @Transactional
-    public Customer persistCustomer(Customer customer) {
-         return customerRepository.save(customer);
+    public TCustomer persistCustomer(TCustomer customer) {
+        return customerRepository.save(customer);
     }
 
     @Override
     @Transactional
-    public void deleteCustomer(Customer customer) {
+    public void deleteCustomer(TCustomer customer) {
         customerRepository.delete(customer);
     }
 
-   
+    @Override
+    public TCustomer findByLogin(String login) {
+        return customerRepository.findByLogin(login);
+    }
 
 }

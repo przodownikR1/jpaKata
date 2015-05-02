@@ -3,7 +3,7 @@ package pl.java.scalatech.service.customer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import pl.java.scalatech.entity.Customer;
+import pl.java.scalatech.entity.test.TCustomer;
 
 
 /**
@@ -13,9 +13,10 @@ import pl.java.scalatech.entity.Customer;
  */
 public interface CustomerService {
 
-    Page<Customer> getAllCustomers(Pageable pageable);
-    Customer persistCustomer(Customer customer);
-    void deleteCustomer(Customer customer);
+    Page<TCustomer> getAllCustomers(Pageable pageable);
+    TCustomer persistCustomer(TCustomer customer);
+    void deleteCustomer(TCustomer customer);
+    TCustomer findByLogin(String login);
   
    
 }

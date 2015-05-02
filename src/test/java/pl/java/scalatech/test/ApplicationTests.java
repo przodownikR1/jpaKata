@@ -18,10 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import pl.java.scalatech.app.JpaKataApplication;
 import pl.java.scalatech.config.JpaEmbeddedConfig;
-import pl.java.scalatech.entity.Customer;
-import pl.java.scalatech.entity.User;
+import pl.java.scalatech.entity.test.TCustomer;
+import pl.java.scalatech.entity.test.TPhone;
 import pl.java.scalatech.repository.UserRepository;
 import pl.java.scalatech.service.customer.CustomerService;
+
+import com.google.common.collect.Lists;
 
 /**
  * @author przodownik
@@ -41,9 +43,9 @@ public class ApplicationTests {
 
     @Before
     public void init() {
-        userRepository.save(new User("przodownik"));
-        userRepository.save(new User("toy"));
-        userRepository.save(new User("boy"));
+        // userRepository.save(new User("przodownik"));
+        // userRepository.save(new User("toy"));
+        // userRepository.save(new User("boy"));
 
     }
 
@@ -55,10 +57,25 @@ public class ApplicationTests {
     @Test
     public void shouldInsertAndRetrieveData() throws InterruptedException {
         log.info("++++  user {}", userRepository.findAll());
-        customerService.persistCustomer(Customer.builder().login("przodownik").name("slawek").salary(new BigDecimal(2342)).build());
-        List<Customer> customers = customerService.getAllCustomers(new PageRequest(0, 1)).getContent();
+        customerService.persistCustomer(TCustomer.builder().login("przodownik").name("slawek").salary(new BigDecimal(2342)).build());
+        List<TCustomer> customers = customerService.getAllCustomers(new PageRequest(0, 1)).getContent();
         log.info("++++ Audit : {}", customers.get(0));
         Assertions.assertThat(customers).isNotEmpty().hasSize(1);
-  
+
+    }
+
+    @Test
+    public void shouldOne2ManyWork() {
+        List<TPhone> phones = Lists.newArrayList(new TPhone("5555"), new TPhone("6666"));
+        TCustomer c = TCustomer.builder().login("przodownikR1").name("slawekR1").salary(new BigDecimal(2342)).build();
+        c.setPhones(phones);
+        customerService.persistCustomer(c);
+        TCustomer przodownikR1 = customerService.findByLogin("przodownikR1");
+        log.info(" +++++       phones {}", przodownikR1.getPhones());
+        System.err.println("test");
+        for (TPhone p : przodownikR1.getPhones()) {
+            log.info("+++  {}", p);
+        }
+
     }
 }

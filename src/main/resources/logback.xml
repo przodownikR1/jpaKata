@@ -70,7 +70,7 @@
 	
 	<logger name="org.mortbay.log" level="INFO" />
 
-	<logger name="org.springframework" level="info" additivity="false">
+	<logger name="org.springframework" level="warn" additivity="false">
 		<appender-ref ref="Console" />
 	</logger>
 
