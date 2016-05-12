@@ -20,7 +20,7 @@ import lombok.Data;
 @Data
 public abstract class PKEntity  {
     /**
-	 * 
+	 *
 	 */
     private static final long serialVersionUID = 7669211182758111346L;
     @Id
@@ -35,7 +35,8 @@ public abstract class PKEntity  {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Basic(fetch = FetchType.LAZY)
-    protected Date dateAdded;
+    protected Date dateAdded ;
+
 
     @PrePersist
     private void initPrePersist() {

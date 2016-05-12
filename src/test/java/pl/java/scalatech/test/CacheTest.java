@@ -3,10 +3,7 @@ package pl.java.scalatech.test;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.java.scalatech.app.JpaKataApplication;
 import pl.java.scalatech.entity.Customer;
 import pl.java.scalatech.service.customer.CustomerService;
@@ -24,7 +22,6 @@ import pl.java.scalatech.service.customer.CustomerService;
 @ActiveProfiles(value = "dev")
 @Transactional
 @Slf4j
-@Ignore
 public class CacheTest {
     @Autowired
     private CustomerService customerService;
@@ -41,14 +38,14 @@ public class CacheTest {
 
     @Test
     public void shouldCacheWorkWhenSearchByLogin() throws IOException {
-        log.info("{}", customerService.findByLogin("przodownik"));
-        log.info("{}", customerService.findByLogin("przodownik"));
-        log.info("{}", customerService.findByLogin("przodownik"));
-        log.info("{}", customerService.findByLogin("przodownik"));
-        log.info("{}", customerService.findByLogin("przodownik"));
-        log.info("{}", customerService.findByLogin("money"));
-        log.info("{}", customerService.findByLogin("money"));
-        log.info("{}", customerService.findByLogin("money"));
+        log.info("{}", customerService.findByLoginFetch("przodownik"));
+        log.info("{}", customerService.findByLoginFetch("przodownik"));
+        log.info("{}", customerService.findByLoginFetch("przodownik"));
+        log.info("{}", customerService.findByLoginFetch("przodownik"));
+        log.info("{}", customerService.findByLoginFetch("przodownik"));
+        log.info("{}", customerService.findByLoginFetch("money"));
+        log.info("{}", customerService.findByLoginFetch("money"));
+        log.info("{}", customerService.findByLoginFetch("money"));
 
         log.info("{}", customerService.findById(1L));
         log.info("{}", customerService.findById(1L));
